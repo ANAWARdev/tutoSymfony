@@ -15,22 +15,22 @@ class RecipeController extends AbstractController
     public function index(Request $request, RecipeRepository $repository, EntityManagerInterface $en): Response
     {
         $recipes = $repository->findwithDurationLowerThan(10);
-
-        $recipe = new Recipe();
-        $recipe->setTitle('Barbe à papa')
-            ->setSlug('barbePapa') // Le slug doit être une chaîne de caractères
-            ->setContent('Mettez du sucre ....')
-            ->setDuration(2)
-            ->setCreatedAt(new \DateTimeImmutable())
-            ->setUpdatedAt(new \DateTimeImmutable());
+    // CRéation d'un nouveau enregistrement
+    //     $recipe = new Recipe();
+    //     $recipe->setTitle('Barbe à papa')
+    //         ->setSlug('barbePapa') // Le slug doit être une chaîne de caractères
+    //         ->setContent('Mettez du sucre ....')
+    //         ->setDuration(2)
+    //         ->setCreatedAt(new \DateTimeImmutable())
+    //         ->setUpdatedAt(new \DateTimeImmutable());
         
-        $en->persist($recipe); // Utilisation de $em au lieu de $en
-        $en->flush();
+    //     $en->persist($recipe); // Utilisation de $em au lieu de $en
+    //     $en->flush();
         
         
-        // dd($recipes); // Vous pouvez supprimer cette ligne une fois que vous avez vérifié les données
-       $recipes[0]->setTitle('Pâtes bolognaise');
-       $en->flush();
+    //     // dd($recipes); // Vous pouvez supprimer cette ligne une fois que vous avez vérifié les données
+    //    $recipes[0]->setTitle('Pâtes bolognaise');
+    //    $en->flush();
         return $this->render('recipe/index.html.twig', [
             'recipes' => $recipes
         ]);
