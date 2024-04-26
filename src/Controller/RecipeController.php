@@ -14,8 +14,11 @@ class RecipeController extends AbstractController
     #[Route('/recettes/', name: 'recipe.index')]
     public function index(Request $request, RecipeRepository $repository, EntityManagerInterface $en): Response
     {
+        dd($repository->findTotalDuration());
+        // dd($en->getRepository(Recipe::class));
         $recipes = $repository->findwithDurationLowerThan(10);
-    // CRéation d'un nouveau enregistrement
+        
+        // Création d'un nouveau enregistrement
     //     $recipe = new Recipe();
     //     $recipe->setTitle('Barbe à papa')
     //         ->setSlug('barbePapa') // Le slug doit être une chaîne de caractères
