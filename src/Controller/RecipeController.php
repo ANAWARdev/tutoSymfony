@@ -8,13 +8,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\ResponseInterface;
+use App\Form\RecipeType;
 
 class RecipeController extends AbstractController
 {
     #[Route('/recettes/', name: 'recipe.index')]
     public function index(Request $request, RecipeRepository $repository, EntityManagerInterface $en): Response
     {
-        dd($repository->findTotalDuration());
+        // dd($repository->findTotalDuration());
         // dd($en->getRepository(Recipe::class));
         $recipes = $repository->findwithDurationLowerThan(10);
         
@@ -52,4 +54,15 @@ class RecipeController extends AbstractController
             'recipe' => $recipe,
         ]);
     }
+
+    #[Route('/recettes/{id}/edit', name: 'recipe.edit')]
+public function edit(Recipe $recipe)
+{
+    $form = $this->createForm(RecipeType::class, $recipe);
+    return$this->render('recipe/edit.html.twig', [
+    'recipe' => $recipe,
+     'form' => $form
+     
+    ]);    
+}
 }
