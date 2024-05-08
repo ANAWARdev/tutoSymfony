@@ -56,13 +56,51 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/recettes/{id}/edit', name: 'recipe.edit')]
-public function edit(Recipe $recipe)
+public function edit(Recipe $recipe, Request $request, EntityManagerInterface $en)
 {
     $form = $this->createForm(RecipeType::class, $recipe);
-    return$this->render('recipe/edit.html.twig', [
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
+        $recipe->setUpdatedAt(new \DateTimeImmutable());
+        $en->flush();
+        $this->addFlash('success', 'La recette a bien été modifiée');
+        return $this->redirectToRoute('recipe.index');
+   
+     }
+    return $this->render('recipe/edit.html.twig', [
     'recipe' => $recipe,
      'form' => $form
      
     ]);    
 }
+#[Route('/recettes/create', name: 'recipe.create')]
+public function create(Request $request, EntityManagerInterface $en)
+{
+    $recipe = new Recipe();
+    $form = $this->createForm(RecipeType::class, $recipe);
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
+        $recipe->setCreatedAt(new \DateTimeImmutable());
+        $recipe->setUpdatedAt(new \DateTimeImmutable());
+        $en->persist($recipe);
+        $en->flush();
+        $this->addFlash('success', 'La recette a bien été créée');
+        return $this->redirectToRoute('recipe.index');
+   
+     }
+    return $this->render('recipe/create.html.twig', [
+     'form' => $form
+     
+    ]);    
 }
+
+#[Route('/recettes/{id}/delete', name: 'recipe.delete')]
+public function remove(Recipe $recipe, EntityManagerInterface $en)
+{
+    $en->remove($recipe);
+    $en->flush();
+        $this->addFlash('success', 'La recette a bien été supprimée');
+        return $this->redirectToRoute('recipe.index');
+   
+     }
+}   
